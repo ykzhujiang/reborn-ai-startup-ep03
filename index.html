@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ep01</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --card-bg: #161b22;
+  --card-border: #30363d;
+  --text: #e6edf3;
+  --text-secondary: #8b949e;
+  --accent: #58a6ff;
+  --dialogue-bg: rgba(88,166,255,0.08);
+  --dialogue-color: #79c0ff;
+  --part-num-color: #f0883e;
+  --camera-bg: rgba(139,148,158,0.08);
+  --header-gradient: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px;
+}
+/* Header */
+.page-header {
+  background: var(--header-gradient);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.page-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #58a6ff, #bc8cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.meta-tag {
+  display: inline-block;
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 99px;
+  background: rgba(88,166,255,0.1);
+  color: var(--accent);
+  border: 1px solid rgba(88,166,255,0.2);
+}
+/* Collapsible sections */
+details {
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  background: var(--card-bg);
+}
+details summary {
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  user-select: none;
+}
+details summary:hover { color: var(--text); }
+details[open] summary { border-bottom: 1px solid var(--card-border); }
+.section-body {
+  padding: 12px 16px;
+}
+/* Character items */
+.char-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  font-size: 14px;
+}
+.char-item:last-child { border-bottom: none; }
+.char-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.char-desc {
+  display: block;
+  margin-top: 4px;
+  margin-left: 16px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+/* Scene items */
+.scene-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(48,54,61,0.5);
+  font-size: 14px;
+}
+.scene-item:last-child { border-bottom: none; }
+.scene-desc {
+  display: block;
+  margin-top: 4px;
+  margin-left: 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+/* Segment card */
+.segment-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.segment-card:hover {
+  border-color: rgba(88,166,255,0.4);
+}
+.segment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px 8px;
+}
+.segment-num {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.segment-dur {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: rgba(240,136,62,0.12);
+  color: var(--part-num-color);
+}
+.segment-meta {
+  padding: 0 16px 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+/* Physical state inside segment */
+.segment-card .physical-state {
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+  background: rgba(139,148,158,0.03);
+}
+.segment-card .physical-state summary {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.ps-item {
+  padding: 4px 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+/* Parts */
+.parts-container {
+  padding: 10px 16px 6px;
+}
+.part-line {
+  padding: 8px 0;
+  font-size: 15px;
+  line-height: 1.8;
+  border-bottom: 1px solid rgba(48,54,61,0.3);
+}
+.part-line:last-child { border-bottom: none; }
+.part-num {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--part-num-color);
+  background: rgba(240,136,62,0.1);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.char-tag {
+  font-weight: 600;
+}
+.dialogue {
+  color: var(--dialogue-color);
+  background: var(--dialogue-bg);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-style: italic;
+}
+/* Camera */
+.camera-line {
+  padding: 8px 16px 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--camera-bg);
+  border-top: 1px solid var(--card-border);
+}
+/* Stats */
+.stats-bar {
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+.stats-bar span {
+  margin: 0 8px;
+}
+/* Mobile tweaks */
+@media (max-width: 480px) {
+  .container { padding: 10px; }
+  .page-header { padding: 18px 14px; }
+  .page-header h1 { font-size: 19px; }
+  .part-line { font-size: 14px; }
+  .segment-header { padding: 10px 12px 6px; }
+  .parts-container { padding: 8px 12px 4px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="page-header">
+  <h1>ep01</h1>
+  <div class="meta-tags">
+    <span class="meta-tag">🎬 realistic</span>
+    <span class="meta-tag">🌍 中国·2019·都市创业</span>
+    <span class="meta-tag">🎨 cinematic noir, dark moody lighting, hig...</span>
+    <span class="meta-tag">📊 15 segments</span>
+  </div>
+</div>
+
+<div class="stats-bar">
+  <span>👤 6 角色</span>
+  <span>🏞️ 3 场景</span>
+  <span>🎬 15 分镜</span>
+</div>
+
+<details>
+  <summary>👤 角色设定 (6)</summary>
+  <div class="section-body"><div class="char-item"><span class="char-dot" style="background:#e74c3c"></span><strong>[陈昊]</strong><span class="char-desc">26岁男性，身高178cm匀称体型，小麦色皮肤，方脸下颌线清晰，浓眉大眼，黑色凌乱碎发，穿着深灰色连帽卫衣和水洗蓝牛仔裤。</span></div>
+<div class="char-item"><span class="char-dot" style="background:#3498db"></span><strong>[苏晚]</strong><span class="char-desc">25岁女性，身高168cm纤细体型，白皙皮肤，瓜子脸细长狐狸眼，黑色齐肩直发，穿着挺括的白衬衫、黑色修身西装外套，戴银色无框眼镜。</span></div>
+<div class="char-item"><span class="char-dot" style="background:#2ecc71"></span><strong>[刘姐]</strong><span class="char-desc">32岁女性，身高165cm微胖体型，白皙皮肤，圆脸小嘴，眼睛总是弯成月牙状假笑，黑色长发盘成整洁发髻，穿着鲜红色亮眼职业套装。</span></div>
+<div class="char-item"><span class="char-dot" style="background:#f39c12"></span><strong>[王哥]</strong><span class="char-desc">40岁男性，身高170cm壮硕偏胖体型，古铜色皮肤，国字脸双下巴，眼睛大而圆，黑色短寸头，穿着塞在黑西裤里的条纹Polo衫，露出显眼的皮带扣。</span></div>
+<div class="char-item"><span class="char-dot" style="background:#9b59b6"></span><strong>[李大妈]</strong><span class="char-desc">60岁女性，身高155cm微胖体型，偏黄皮肤，圆脸布满皱纹，短款深棕色羊毛卷烫发，穿着大红大绿的碎花衬衫，左手腕戴着粗大的翡翠手镯。</span></div>
+<div class="char-item"><span class="char-dot" style="background:#1abc9c"></span><strong>[赵大妈]</strong><span class="char-desc">58岁女性，身高160cm瘦削体型，白皙皮肤，尖下巴细长眼，黑色短发，头戴紫色防晒空顶帽，脖子上系着一条鲜艳的红色丝巾。</span></div>
+</div>
+</details>
+
+<details>
+  <summary>🏞️ 场景描述 (3)</summary>
+  <div class="section-body"><div class="scene-item"><strong>[初创办公室-日]</strong><span class="scene-desc">2019年风格的初创公司办公室，空间略显拥挤，靠墙有写满算法流程图的白板，角落服务器闪烁绿灯。白天阳光透过百叶窗照入，桌面堆满咖啡杯和文件，氛围忙碌且充满活力。</span></div>
+<div class="scene-item"><strong>[初创办公室-夜]</strong><span class="scene-desc">同一个初创办公室的夜晚状态。大灯已关，主要光源来自电脑屏幕发出的冷蓝色光和办公桌上暖黄色的台灯。环境光线暗淡，阴影对比强烈，充满熬夜加班的紧绷氛围。</span></div>
+<div class="scene-item"><strong>[电梯间-日]</strong><span class="scene-desc">现代化写字楼的电梯间。地面铺着光亮的灰色大理石，倒映着天花板明亮的冷白色荧光灯。银色不锈钢电梯门紧闭，光线充足，氛围冷峻专业。</span></div>
+</div>
+</details>
+
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 1</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#e74c3c">[陈昊]</span>, <span class="char-tag" style="color:#3498db">[苏晚]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面左侧，站立，双手撑着办公桌边缘，视线紧盯右侧的苏晚。</div><div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面右侧，站立，右手拿着一份合同，视线迎向左侧的陈昊。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>双手用力撑着办公桌边缘，身体前倾，眉头紧锁盯着右侧。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“既然你是002号重生者，咱们就别绕弯子了。”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#3498db">[苏晚]</span>拉开办公椅优雅落座，将CTO合同用力拍在木桌上。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“180天淘汰赛倒计时，接下来技术开发我说了算。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 中景，平视角度，固定机位，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 2</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [电梯间-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#2ecc71">[刘姐]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#2ecc71">[刘姐]</span>**: 画面右侧，站立，双手交叠在腹前，视线看向左侧的陈昊。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面左侧，站立，双手自然垂下，视线看向右侧的刘姐。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#2ecc71">[刘姐]</span>踩着高跟鞋迈出电梯，嘴角挂着无懈可击的职业微笑。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#2ecc71">[刘姐]</span>说：<span class="dialogue">“陈总，明天的Demo Day沈总可是寄予厚望哦。”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>倒吸一口凉气，嘴角不自然地抽动两下，强颜欢笑。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“刘姐放心，我们的AI模型保证给沈总一个惊喜。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 中景，平视角度，缓慢推镜头，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 3</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#3498db">[苏晚]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面左侧，坐着，双手敲击键盘，视线紧盯正前方的显示器。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面右侧，站立，双手抱胸，视线看向左侧的电脑屏幕。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#3498db">[苏晚]</span>修长的手指在机械键盘上飞速敲击，目光锐利如刀。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“算法核心架构已重构，马上进行第一次深度学习测试。”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>探着身子凑向屏幕，眼睛猛地睁大，眼底闪过一丝兴奋。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“跑通了！这运算速度比咱们之前快了至少三倍！”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 近景，微俯视角度，固定机位，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 4</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#3498db">[苏晚]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面左侧，坐着，右手握鼠标，视线盯着屏幕。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面右侧，站立，右手抓挠后脑勺，视线盯着屏幕。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#3498db">[苏晚]</span>轻点鼠标停止程序，推了推鼻梁上的银色眼镜框。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“不对劲，这AI输出的怎么是2021年奥运会的新闻？”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>脸色骤变，右脚慌乱地后退半步，急忙伸手去拔电源线。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“可能是抓取了什么垃圾网页，我先重启一下服务器！”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 特写，平视角度，快速横移，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 5</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#3498db">[苏晚]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面左侧，站立，左手拿着一本黑色笔记，视线盯着右侧的陈昊。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面右侧，站立，右手停在半空，视线看向左侧的苏晚。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#3498db">[苏晚]</span>一把推开键盘底座，从下面抽出一本黑色封皮笔记本。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“《2022年量化交易备忘录》？陈昊，你连我都防？”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>伸手想抢夺笔记本，但手停在半空中，尴尬地攥成拳头。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>的内心独白，低声说：<span class="dialogue">“完了，未来数据泄露到训练集里了。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 中景，平视角度，固定机位，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 6</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-夜] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#3498db">[苏晚]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面左侧，站立，双手抱胸，视线怒视右侧的陈昊。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面右侧，坐着，双手捂着脸，视线低垂看桌面。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#3498db">[苏晚]</span>冷着脸将笔记本砸在桌面上，纸张发出清脆的响声。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“既然合作就别藏着掖着，信任裂痕会让我们都出局！”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>疲惫地移开双手，抬起充满红血丝的双眼看向左侧。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“我是怕改变历史太多引起蝴蝶效应，对不起。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 近景，平视角度，微推镜头，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 7</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-夜] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#3498db">[苏晚]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面左侧，坐着，双手悬在键盘上，视线紧盯屏幕。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面右侧，站立，双手撑着椅背，视线紧盯屏幕。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span>整个办公室的电脑屏幕突然同时闪烁起刺眼的红色警告弹窗。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#3498db">[苏晚]</span>猛地坐直身体，双手在键盘上疯狂敲击输入指令。</div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“糟了！模型内存溢出，底层逻辑链正在全面崩溃！”</span></div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>焦急地弯下腰，脸几乎贴到屏幕上，额头冒出冷汗。</div>
+
+  </div>
+  <div class="camera-line">🎥 中景，仰视角度，轻微摇晃，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 8</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-夜] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#e74c3c">[陈昊]</span>, <span class="char-tag" style="color:#3498db">[苏晚]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面左侧，坐着，双手飞速敲击键盘，视线紧盯屏幕。</div><div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面右侧，站立，右手搭在椅背上，视线看向左侧的陈昊。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>一把推开转椅，自己坐进主位，双手砸向机械键盘。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“闪开！用2019年的算法救不回来，必须降维打击！”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#3498db">[苏晚]</span>被推得后退一步，咬紧嘴唇，紧张地盯着陈昊的侧脸。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“你要干什么？强行植入未来代码会导致系统锁死的！”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 近景，侧面角度，固定机位，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 9</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-夜] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#e74c3c">[陈昊]</span>, <span class="char-tag" style="color:#3498db">[苏晚]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面左侧，坐着，右手重重按下回车键，视线看着屏幕。</div><div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面右侧，站立，双手抱胸，视线看着屏幕。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>右手食指高高抬起，重重砸向回车键，发出巨大的清脆声。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“2022年量化修剪技术，给我强行覆盖脏数据！”</span></div>
+<div class="part-line"><span class="part-num">P3</span>屏幕上的红色警报瞬间消散，全部转为平稳运行的绿色代码流。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#3498db">[苏晚]</span>长舒了一口气紧绷的肩膀垮了下来，嘴角微微上扬。</div>
+
+  </div>
+  <div class="camera-line">🎥 特写，正面平视角度，固定机位，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 10</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-夜] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#e74c3c">[陈昊]</span>, <span class="char-tag" style="color:#3498db">[苏晚]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面左侧，坐着，身体向后靠在椅背上，视线看向右侧。</div><div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面右侧，站立，双手插进西装口袋，视线看向左侧。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>瘫软在椅子上，长长吐出一口浊气，转头看向右侧。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“距离Demo Day还剩六小时，命保住了。”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#3498db">[苏晚]</span>推了推鼻梁上的眼镜，眼中闪过一丝欣赏与戒备。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“手法很熟练，看来你在未来混得比我好。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 中景，平视角度，缓慢拉镜头，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 11</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#2ecc71">[刘姐]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#2ecc71">[刘姐]</span>**: 画面右侧，站立，双手自然叠放，视线看向左侧的陈昊。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面左侧，站立，双手整理卫衣领口，视线看向右侧。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span>清晨阳光照亮办公室，<span class="char-tag" style="color:#2ecc71">[刘姐]</span>笑眯眯地推开玻璃门走进来。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#2ecc71">[刘姐]</span>说：<span class="dialogue">“哎呀，两位熬通宵啦？沈总的车已经在楼下了哦。”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>用力揉了揉布满红血丝的眼睛，强打精神站直身体。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“催命判官又来了，刘姐，设备马上打包好。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 全景，平视角度，固定机位，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 12</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#f39c12">[王哥]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#f39c12">[王哥]</span>**: 画面左侧，站立，右手大手一挥，视线看向右侧。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面右侧，站立，双手张开做阻拦状，视线看向左侧。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#f39c12">[王哥]</span>兴冲冲地撞开门，领着几位穿戴花哨的大妈涌入办公室。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#f39c12">[王哥]</span>说：<span class="dialogue">“昊子！我把小区最懂投资的大妈们请来当测试员了！”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>震惊地瞪大双眼，双手慌乱地挥舞着试图阻止人群。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>说：<span class="dialogue">“王哥你疯了？这是给投资人看的专业量化模型！”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 中景，微俯视角度，跟镜头横移，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 13</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#9b59b6">[李大妈]</span>, <span class="char-tag" style="color:#3498db">[苏晚]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#9b59b6">[李大妈]</span>**: 画面左侧，弯腰，右手凑近麦克风，视线紧盯屏幕。</div><div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面右侧，站立，右手扶额，视线无奈地看向左侧。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#9b59b6">[李大妈]</span>大声对着屏幕喊，翡翠手镯在桌面上磕得梆梆直响。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#9b59b6">[李大妈]</span>说：<span class="dialogue">“小机器，你给算算明天早市的后腿肉能降到十五块不？”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#3498db">[苏晚]</span>无奈地单手扶住额头，深深吸了一口气，闭上眼睛。</div>
+<div class="part-line"><span class="part-num">P4</span>屏幕闪烁一行字，<span class="char-tag" style="color:#3498db">[苏晚]</span>念道：<span class="dialogue">“生猪期货走势预测...已下调。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 近景，平视角度，固定机位，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 14</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#1abc9c">[赵大妈]</span>, <span class="char-tag" style="color:#e74c3c">[陈昊]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#1abc9c">[赵大妈]</span>**: 画面左侧，站立，双手竖起大拇指，视线看向右侧。</div><div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面右侧，站立，双手尴尬地搓着，视线看向左侧。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span><span class="char-tag" style="color:#1abc9c">[赵大妈]</span>乐得合不拢嘴，挥舞着红丝巾朝陈昊竖起大拇指。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#1abc9c">[赵大妈]</span>说：<span class="dialogue">“这AI真神了！连小区广场舞占地儿的概率都能算！”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>尴尬地搓着双手，嘴角抽搐着挤出一个比哭还难看的笑。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>的内心独白，低声说：<span class="dialogue">“完了，高大上的DemoDay变成菜市场了。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 中景，平视角度，微推镜头，正常速度</div>
+</div>
+
+<div class="segment-card">
+  <div class="segment-header">
+    <span class="segment-num">Segment 15</span>
+    <span class="segment-dur">≤15s</span>
+  </div>
+  <div class="segment-meta">📍 [初创办公室-日] &nbsp;|&nbsp; 👥 <span class="char-tag" style="color:#e74c3c">[陈昊]</span>, <span class="char-tag" style="color:#3498db">[苏晚]</span></div>
+  <details class="physical-state">
+<summary>📐 Physical State</summary>
+<div class="ps-item">**<span class="char-tag" style="color:#e74c3c">[陈昊]</span>**: 画面左侧，站立，右手捏着一张纸条，视线低垂看纸条。</div><div class="ps-item">**<span class="char-tag" style="color:#3498db">[苏晚]</span>**: 画面右侧，站立，双手插兜背对镜头转头，视线看向左侧。</div>
+</details>
+  <div class="parts-container">
+    <div class="part-line"><span class="part-num">P1</span>人群散去，<span class="char-tag" style="color:#e74c3c">[陈昊]</span>从键盘下抽出一张苏晚留下的白色便签纸。</div>
+<div class="part-line"><span class="part-num">P2</span><span class="char-tag" style="color:#e74c3c">[陈昊]</span>低声念出纸条上的字：<span class="dialogue">“淘汰赛规则更新：合作者共同承担结果。”</span></div>
+<div class="part-line"><span class="part-num">P3</span><span class="char-tag" style="color:#3498db">[苏晚]</span>走到门口停下脚步，回头朝陈昊露出一抹狡黠的笑容。</div>
+<div class="part-line"><span class="part-num">P4</span><span class="char-tag" style="color:#3498db">[苏晚]</span>说：<span class="dialogue">“现在我们是一条绳上的蚂蚱了，陈总，明天见。”</span></div>
+
+  </div>
+  <div class="camera-line">🎥 近景，平视角度，缓慢拉镜头，正常速度</div>
+</div>
+
+
+</div>
+
+<script>
+// Auto-open first segment's physical state on load (optional interactivity)
+document.addEventListener('DOMContentLoaded', function() {
+  // Smooth scroll spy - highlight current segment
+  const cards = document.querySelectorAll('.segment-card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.borderColor = 'rgba(88,166,255,0.5)';
+      } else {
+        e.target.style.borderColor = '';
+      }
+    });
+  }, { threshold: 0.3 });
+  cards.forEach(c => observer.observe(c));
+});
+</script>
+</body>
+</html>
