@@ -1,0 +1,33 @@
+{
+  "project": "reborn-ai-startup-ep03",
+  "created_at": "2026-04-07T18:08:41.757402+00:00",
+  "github_repo": "ykzhujiang/reborn-ai-startup-ep03",
+  "config": {
+    "theme": "重生×AI创业EP03：陈昊与苏晚（002号重生者）摊牌，被迫在合作与竞争间博弈。180天淘汰赛倒计时+沈总Demo Day双重压力。苏晚加入团队当CTO，技术突破但AI意外输出未来新闻（训练数据泄露）。苏晚发现陈昊的未来笔记，信任裂痕。Demo Day前夜系统崩溃→陈昊用2022年量化技术应急修复。王哥带小区大妈来体验AI（搞笑高潮），刘姐（沈总助理）每次出场都是笑着催命。章末：苏晚塞纸条+短信淘汰赛规则更新合作者共同承担结果。15段。",
+    "genre": "comedy",
+    "style": "realistic",
+    "duration": 120,
+    "characters": 6,
+    "setting": "中国·2019·都市创业",
+    "ratio": "9:16",
+    "episode": "ep01"
+  },
+  "status": "not_started",
+  "steps": {
+    "step1b": {
+      "status": "not_started"
+    },
+    "step1.5": {
+      "status": "not_started"
+    },
+    "step3": {
+      "status": "not_started"
+    },
+    "step4": {
+      "status": "not_started"
+    },
+    "step6": {
+      "status": "not_started"
+    }
+  }
+}
