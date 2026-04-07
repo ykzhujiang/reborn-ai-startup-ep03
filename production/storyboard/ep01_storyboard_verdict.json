@@ -1,0 +1,6 @@
+{
+  "checked_at": "2026-04-07T18:10:13.446985+00:00",
+  "verdict": "SKIP",
+  "reason": "check_storyboard.py not available",
+  "storyboard": "ep01.md"
+}
